@@ -4,3 +4,5 @@
 .Ruserdata
 
 inst/node_modules/.bin
+
+.jamovi-checkout

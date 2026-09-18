@@ -13,6 +13,14 @@ install.packages('jmvtools', repos='https://repo.jamovi.org')
 
 The `jamovi-compiler` directory from the `jamovi/jamovi` needs to be mounted at `inst/node_modules/jamovi-compiler` of this project.
 
+This can be done in one step with [`just`](https://github.com/casey/just):
+
+```
+just update-compiler
+```
+
+which performs all of the steps below (`update-compiler-branch` then `pull-compiler-subtree`), using a throwaway clone of `jamovi/jamovi` so your working tree is untouched. Run `just --list` to see the individual recipes.
+
 We manage this by maintaining a subtree branch called `compiler` in `jamovi/jamovi`. To update this branch (so that it contains the current contents of the `jamovi-compiler` subdirectory):
 
 ```
