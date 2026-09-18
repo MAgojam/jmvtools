@@ -6,3 +6,5 @@
 inst/node_modules/.bin
 
 .jamovi-checkout
+*.tar.gz
+jamovi-repo

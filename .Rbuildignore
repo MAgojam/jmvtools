@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^\.jamovi-checkout$
 ^justfile$
+^.*\.tar\.gz$
+^jamovi-repo$
