@@ -39,14 +39,24 @@ update-compiler-branch message="Update jamovi-compiler":
         git push
     rm -rf {{checkout_dir}}
 
+# fail if tracked files have uncommitted changes (git subtree requires a clean tree)
+check-clean:
+    #!/usr/bin/env bash
+    if ! git diff-index --quiet HEAD --; then
+        echo "error: the working tree has uncommitted changes, and git subtree requires a clean tree:" >&2
+        git status --short --untracked-files=no >&2
+        echo "commit or stash them, then run this again" >&2
+        exit 1
+    fi
+
 # ensure the jamovi/jamovi remote used to pull the compiler branch is set up
 ensure-jamovi-remote:
     git remote get-url jamovi >/dev/null 2>&1 || git remote add jamovi {{jamovi_repo}}
 
 # pull the current `compiler` branch from jamovi/jamovi into inst/node_modules/jamovi-compiler
-pull-compiler-subtree message="Update jamovi-compiler": ensure-jamovi-remote
+pull-compiler-subtree message="Update jamovi-compiler": check-clean ensure-jamovi-remote
     git fetch jamovi
     git subtree pull --prefix=inst/node_modules/jamovi-compiler jamovi compiler --squash -m "{{message}}"
 
 # full jamovi-compiler update: refresh the compiler branch upstream, then pull it in here
-update-compiler message="Update jamovi-compiler": (update-compiler-branch message) (pull-compiler-subtree message)
+update-compiler message="Update jamovi-compiler": check-clean (update-compiler-branch message) (pull-compiler-subtree message)
